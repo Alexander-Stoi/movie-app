@@ -44,6 +44,9 @@ class MovieService {
       }
       return youTubeLinks;
     } catch (error) {
+      if (error.response.status === 404) {
+        return [];
+      }
       throw error;
     }
   }
@@ -52,7 +55,7 @@ class MovieService {
   static async getMovies(page, query) {
     try {
       const movies = await this.fetchMovies(page, query);
-      const listOfMovies = await movies.map(async (movie) => {
+      const listOfMovies = movies.map(async (movie) => {
         const youtubeLinks = await this.fetchMovieTrailers(
           movie.id,
           movie.media_type
